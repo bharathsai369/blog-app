@@ -6,36 +6,33 @@ import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   return (
-    <div
-      className="hero min-h-screen bg-base-100 text-base-content flex flex-col items-center"
-      // style={{
-      //   backgroundImage:
-      //     "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
-      //     objectFit:"contain"
-      // }}
-    >
-      {/* <div className="min-h-screen bg-base-100 text-base-content flex flex-col items-center"> */}
-      <div className="w-full lg:w-11/12">
-        <Navbar />
+    <div className="min-h-screen bg-base-100">
+      <Navbar />
+      
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Left Sidebar */}
+          <aside className="lg:w-1/4 order-2 lg:order-1">
+            <div className="sticky top-6">
+              <LeftSidebar />
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 order-1 lg:order-2">
+            {children}
+          </main>
+
+          {/* Right Sidebar */}
+          <aside className="lg:w-1/4 order-3">
+            <div className="sticky top-6">
+              <RightSidebar />
+            </div>
+          </aside>
+        </div>
       </div>
 
-      <div className="border w-full lg:w-11/12 px-4 py-6 flex flex-col lg:flex-row gap-4">
-        {/* <aside className="lg:w-1/5 order-2 lg:order-1">
-          <LeftSidebar />
-        </aside> */}
-
-        <main className="flex-1 order-1 lg:order-2 border rounded p-4 bg-base-200">
-          {children}
-        </main>
-
-        <aside className="lg:w-1/5 order-2">
-          <RightSidebar />
-        </aside>
-      </div>
-
-      <div className="w-full lg:w-11/12">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

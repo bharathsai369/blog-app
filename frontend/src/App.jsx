@@ -6,8 +6,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BlogDetail from "./pages/BlogDetail";
 import CreateBlog from "./pages/CreateBlog";
-import Layout from "./components/Layout";
 import EditBlog from "./pages/EditBlog";
+import UserProfile from "./pages/UserProfile";
+import Layout from "./components/Layout";
 
 function App() {
   const { user, loading } = useAuth();
@@ -30,6 +31,14 @@ function App() {
         element={
           <Layout>
             <BlogDetail />
+          </Layout>
+        }
+      />
+      <Route
+        path="/user/:username"
+        element={
+          <Layout>
+            <UserProfile />
           </Layout>
         }
       />

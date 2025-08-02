@@ -3,22 +3,28 @@ import {
   signup,
   login,
   logout,
-  //   updateProfile,
+  getProfile,
+  updateProfile,
+  getUserByUsername,
+  toggleFollow,
+  searchUsers,
   checkAuth,
-  profileRoute,
 } from "../controllers/user.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/signup", signup); // POST /api/auth/register
-router.post("/login", login); // POST /api/auth/login
-router.post("/logout", logout);
-
-// router.put("/update-profile", protectRoute, updateProfile);
-
-router.get("/profile", protectRoute, profileRoute);
-
+// Public routes
+router.post("/signup", signup);
+router.post("/login", login);
+router.get("/logout", logout);
 router.get("/check", protectRoute, checkAuth);
+
+// Protected routes
+router.get("/profile", protectRoute, getProfile);
+router.put("/profile", protectRoute, updateProfile);
+router.get("/user/:username", getUserByUsername);
+router.post("/follow/:username", protectRoute, toggleFollow);
+router.get("/search", searchUsers);
 
 export default router;

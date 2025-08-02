@@ -9,16 +9,22 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
+    
     try {
       const res = await axios.post("/auth/login", { email, password });
       setUser(res.data.user);
       navigate("/");
     } catch (err) {
+      console.error("Login error:", err);
       setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -27,8 +33,13 @@ function Login() {
       <form onSubmit={handleSubmit} className="card-body">
         <div className="flex justify-center">
           <h2 className="text-3xl font-bold">Login</h2>
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </div>
+        
+        {error && (
+          <div className="alert alert-error">
+            <span>{error}</span>
+          </div>
+        )}
 
         <label className="input validator">
           <svg
@@ -53,6 +64,7 @@ function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoading}
           />
         </label>
         <div className="validator-hint hidden">Enter valid email address</div>
@@ -79,19 +91,27 @@ function Login() {
             value={password}
             required
             placeholder="Password"
-            minlength="8"
+            minLength="8"
+            disabled={isLoading}
           />
         </label>
         <p className="validator-hint hidden">
           Must be more than 8 characters
-          {/* , including <br />
-          At least one number <br />
-          At least one lowercase letter <br />
-          At least one uppercase letter */}
         </p>
         <div className="mt-6">
-          <button type="submit" className="btn btn-primary btn-block">
-            Login
+          <button 
+            type="submit" 
+            className="btn btn-primary btn-block"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
         </div>
       </form>

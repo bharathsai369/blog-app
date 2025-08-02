@@ -10,12 +10,15 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
+    
     try {
-      const res = await axios.post("/auth/register", {
+      const res = await axios.post("/auth/signup", {
         username,
         email,
         password,
@@ -23,7 +26,10 @@ function Register() {
       setUser(res.data.user);
       navigate("/");
     } catch (err) {
+      console.error("Registration error:", err);
       setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,8 +38,14 @@ function Register() {
       <form onSubmit={handleSubmit} className="card-body">
         <div className="flex justify-center">
           <h2 className="text-3xl font-bold">Register</h2>
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </div>
+        
+        {error && (
+          <div className="alert alert-error">
+            <span>{error}</span>
+          </div>
+        )}
+        
         <label className="input validator">
           <svg
             className="h-[1em] opacity-50"
@@ -58,9 +70,10 @@ function Register() {
             required
             placeholder="Username"
             pattern="[A-Za-z][A-Za-z0-9\-]*"
-            minlength="3"
-            maxlength="30"
+            minLength="3"
+            maxLength="30"
             title="Only letters, numbers or dash"
+            disabled={isLoading}
           />
         </label>
         <div className="validator-hint hidden">Enter username</div>
@@ -88,6 +101,7 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="mail@site.com"
             required
+            disabled={isLoading}
           />
         </label>
         <div className="validator-hint hidden">Enter valid email address</div>
@@ -114,15 +128,27 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Password"
-            minlength="8"
+            minLength="8"
+            disabled={isLoading}
           />
         </label>
         <div className="validator-hint hidden">
           Must be more than 8 characters
         </div>
         <div className="mt-6">
-          <button type="submit" className="btn btn-primary btn-block">
-            Register
+          <button 
+            type="submit" 
+            className="btn btn-primary btn-block"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                Creating account...
+              </>
+            ) : (
+              "Register"
+            )}
           </button>
         </div>
       </form>
